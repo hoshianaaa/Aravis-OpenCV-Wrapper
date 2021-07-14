@@ -4,9 +4,9 @@ CC=g++
 MAIN_C = main.cpp
 ADDN=Camera.cpp
 
-INCLUDES= -I<PATH TO ARAVIS SRC>aravis/src/ -I/usr/include/glib-2.0/ -I/usr/lib/x86_64-linux-gnu/glib-2.0/include 
+INCLUDES= -I/home/hoshina/aravis/src/ -I/home/hoshina/aravis/build/src/ -I/usr/include/glib-2.0/ -I/usr/lib/x86_64-linux-gnu/glib-2.0/include 
 
-LINKAGES=-L/usr/lib -L/usr/local/lib -L/usr/lib/x86_64-linux-gnu/ -L<PATH TO ARARVIS SRC>/builddir/src/ -laravis-0.8 -lglib-2.0 -lm -pthread -lgio-2.0 -lgobject-2.0 -lxml2 -lgthread-2.0 -lglib-2.0 -lz -lusb-1.0  -lpng 
+LINKAGES=-L/usr/lib -L/usr/local/lib -L/usr/lib/x86_64-linux-gnu/ -L/home/hoshina/aravis/src/libaravis-0.8.so	-laravis-0.8 -lglib-2.0 -lm -pthread -lgio-2.0 -lgobject-2.0 -lxml2 -lgthread-2.0 -lglib-2.0 -lz -lusb-1.0  -lpng 
 
 PKGS=`pkg-config --cflags --libs opencv` 
 
