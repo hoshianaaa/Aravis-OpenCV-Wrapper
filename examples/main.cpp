@@ -1,41 +1,65 @@
-#include "Camera.hpp"
+#include "arv.h"
+#include <iostream>
+#include "opencv2/opencv.hpp"
 
 int main(int argc, char *argv[]){
 
-    //Camera cam("TIS-11714131", false);
-    //Camera cam("Fake", false);
-    Camera cam("Aravis-Fake-GV01", false);
-    cam.setProperties("GAIN", 15.0);
-    cam.setProperties("EXP_TIME", 50000.0);
-    cam.setProperties("FPS", 30);
-    cam.start_video();
-    while(true){
- //       IplImage* image;
-//        image = cam.readFrameIPL();
-        cv::Mat image = cam.readFrameMat();
-//        cvShowImage("Image", image);
-//        int keypress = cvWaitKey(1) & 0xFF;
-        //cv::imshow("Image", image);
-        int keypress = cv::waitKey(1) & 0xFF;
+  ArvCamera *camera;
+  ArvStream *stream;
+  GError *error = NULL;
 
-        /***** TO USE WITH OPENCV C++ MAT CONTAINER ****/
+  camera = arv_camera_new (NULL, &error);
 
-        // cv::Mat m;
-        // m = cam.readFrameMat();
-        // cv::imshow("frame", m);
-        // int keypress = cv::waitKey(1) & 0xFF;
-        
-        if(keypress == 27){
-            break;
-        }else if (keypress == 115){
-            
-        }
+  if (ARV_IS_CAMERA (camera)) {
+    arv_camera_set_frame_rate (camera, 10.0, NULL);
+
+    gint payload;
+    payload = arv_camera_get_payload (camera, NULL);
+
+    stream = arv_camera_create_stream (camera, NULL, NULL, &error);
+
+    if (ARV_IS_STREAM (stream)) {
+
+    for (int i=0;i<1000;i++)
+    {
+      arv_stream_push_buffer (stream, arv_buffer_new (payload, NULL));
     }
 
-//    cvDestroyAllWindows();
-     cv::destroyAllWindows();
-    cam.disconnect();
+    arv_camera_start_acquisition (camera, NULL);
 
-    return 0;
+    int count = 0;
+
+      while (true)
+      {
+        ArvBuffer *_buffer = NULL;
+         _buffer = arv_stream_pop_buffer(stream);
+
+         std::cout << count << ":";
+
+         if (_buffer != NULL){
+             size_t buffer_size;
+             void* framebuffer = NULL;
+
+            framebuffer = (void*)arv_buffer_get_data(_buffer, &buffer_size);
+
+            cv::Mat src;
+            src = cv::Mat (512, 512, CV_8UC1, (uchar*)framebuffer);
+            cv::imshow("frame", src);
+            int keypress = cv::waitKey(20) & 0xFF;
+
+            std::cout  << buffer_size << std::endl;
+         }
+         else
+         {
+           std::cout << "buffer null!!!" << std::endl;
+         }
+
+         count++;
+
+      }
+    }
+  }
+
+
+return 0;
 }
-

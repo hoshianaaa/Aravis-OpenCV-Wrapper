@@ -2,7 +2,7 @@
 
 CC=g++
 MAIN_C = main.cpp
-ADDN=Camera.cpp
+#ADDN=Camera.cpp
 
 INCLUDES= -I/home/hoshina/aravis/src/ -I/home/hoshina/aravis/build/src/ -I/usr/include/glib-2.0/ -I/usr/lib/x86_64-linux-gnu/glib-2.0/include 
 
